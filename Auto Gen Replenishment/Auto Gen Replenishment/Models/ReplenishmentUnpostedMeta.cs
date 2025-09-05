@@ -12,11 +12,11 @@ namespace AutoGenReplenishment.Models
     internal class ReplenishmentUnpostedMeta
     {
         public string DocNo { get; set; }
-        public DateTime ReplenishmentDate { get; set; }
-        public string ReplenishmentFrom { get; set; }
-        public string ReplenishmentTo { get; set; }
-        public string ReplenishmentBy { get; set; }
-        public string ReplenishmentByName { get; set; }
+        public DateTime ReplenishDate { get; set; }
+        public string ReplenishFrom { get; set; }
+        public string ReplenishTo { get; set; }
+        public string ReplenishBy { get; set; }
+        public string ReplenishByName { get; set; }
         public int CalcMode { get; set; }
         [Column("comment")]
         public string? Comment1 { get; set; }

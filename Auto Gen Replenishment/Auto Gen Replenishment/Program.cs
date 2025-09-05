@@ -104,10 +104,6 @@ internal class Program
         //{
         //    Console.WriteLine("No replenishment items found.");
         //}
-
-
-
-
     }
 
     private static void CreatePdf(Company company, ReplenishmentUnpostedResultModel replenishments)
@@ -474,8 +470,32 @@ internal class Program
         Console.WriteLine("PDF created successfully!");
     }
 
-    private static void GeneratePDF3(Company company2, ReplenishmentUnpostedResultModel replenishment)
+    private static void GeneratePDF3(Company company, ReplenishmentUnpostedResultModel replenishment)
     {
+        string getCompanyMeta()
+        {
+            return string.Concat(company.Nam,
+                                string.IsNullOrEmpty(company.Adrs1) ? null : $"\n{company.Adrs1}",
+                                string.IsNullOrEmpty(company.Adrs2) ? null : $"\n{company.Adrs2}",
+                                string.IsNullOrEmpty(company.Adrs3) ? null : $"\n{company.Adrs3}",
+                                string.IsNullOrEmpty(company.Phone1) ? null : $"\n{company.Phone1}",
+                                string.IsNullOrEmpty(company.EmailAdrs1) ? null : $"\n{company.EmailAdrs1}");
+        }
+
+        Func<string> getDocumentMeta = () => string.Concat($"Document #: {replenishment.Meta.DocNo}",
+                                                $"\nDate: {replenishment.Meta.ReplenishDate.ToShortDateString()}",
+                                                $"\nPrepared by: {replenishment.Meta.ReplenishByName}");
+
+        Func<string> getFrom = () => string.Concat($"{replenishment.FromLocation.Descr}",
+                                                    string.IsNullOrEmpty(replenishment.FromLocation.City) ? null : $"\n{replenishment.FromLocation.City}",
+                                                    string.IsNullOrEmpty(replenishment.FromLocation.State) ? null : $", {replenishment.FromLocation.State}",
+                                                    string.IsNullOrEmpty(replenishment.FromLocation.ZipCode) ? null : $", {replenishment.FromLocation.ZipCode}");
+
+        Func<string> getTo = () => string.Concat($"{replenishment.ToLocation.Descr}",
+                                                    string.IsNullOrEmpty(replenishment.ToLocation.City) ? null : $"\n{replenishment.ToLocation.City}",
+                                                    string.IsNullOrEmpty(replenishment.ToLocation.State) ? null : $", {replenishment.ToLocation.State}",
+                                                    string.IsNullOrEmpty(replenishment.ToLocation.ZipCode) ? null : $", {replenishment.ToLocation.ZipCode}");
+
         var document = new Document();
         document.Info.Title = "Unposted Replenishment Report";
         var section = document.AddSection();
@@ -503,8 +523,8 @@ internal class Program
 
         var row = metaTable.AddRow();
         //row.Cells[1].Format.Alignment = ParagraphAlignment.Right;
-        row.Cells[0].AddParagraph("DFC Retail Group\n645 Tournament Lane\nOregon, OR, 38138\n800-I-LUV-GOLF\nprogolfer@progolfer.com");
-        row.Cells[1].AddParagraph("Document #: 28");
+        row.Cells[0].AddParagraph(getCompanyMeta());
+        row.Cells[1].AddParagraph(getDocumentMeta());
 
         section.AddParagraph().AddLineBreak();
 
@@ -512,9 +532,10 @@ internal class Program
         var addrTable = section.AddTable();
         addrTable.AddColumn("22cm");
         addrTable.AddColumn("4cm");
+        addrTable.Format.Font.Size = 8;
         var addrRow = addrTable.AddRow();
-        addrRow.Cells[0].AddParagraph("From:\nDFC Wholesale\nHouston, TX, 22570");
-        addrRow.Cells[1].AddParagraph("To:\nCentral Warehouse\nOldsmar, FL, 34677");
+        addrRow.Cells[0].AddParagraph($"From:\n{getFrom()}");
+        addrRow.Cells[1].AddParagraph($"To:\n{getTo()}");
 
         section.AddParagraph().AddLineBreak();
 
