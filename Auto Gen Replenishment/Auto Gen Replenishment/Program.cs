@@ -482,11 +482,14 @@ internal class Program
 
         section.PageSetup.Orientation = Orientation.Landscape;
         section.PageSetup.LeftMargin = Unit.FromCentimeter(1.5);
+        section.PageSetup.DifferentFirstPageHeaderFooter = true;
 
         // Header
-        var header = section.Headers.Primary.AddParagraph();
-        header.AddFormattedText("Unposted Replenishment Report", TextFormat.Bold);
-        header.Format.Font.Size = 14;
+        var header = section.Headers.FirstPage.AddParagraph();
+        var headerImage = header.AddImage("assets/images/pos_hw_transparent.png");
+        headerImage.Width = "6cm";
+        header.AddFormattedText("\nUnposted Replenishment Report", TextFormat.Bold);
+        header.Format.Font.Size = 11;
         header.Format.Alignment = ParagraphAlignment.Center;
 
         //header.Format.SpaceAfter = "1cm";
@@ -586,16 +589,16 @@ internal class Program
         signatureRows.Cells[1].Format.Alignment= ParagraphAlignment.Right;
 
         // Render PDF
-        //var renderer = new PdfDocumentRenderer(true)
-        //{
-        //    Document = document
-        //};
-        //renderer.RenderDocument();
-        //renderer.PdfDocument.Save("ReplenishmentReport.pdf");
-
-        var renderer = new PdfDocumentRenderer(true);
-        renderer.Document = document;
+        var renderer = new PdfDocumentRenderer()
+        {
+            Document = document
+        };
         renderer.RenderDocument();
         renderer.PdfDocument.Save("Report.pdf");
+
+        //var renderer = new PdfDocumentRenderer(true);
+        //renderer.Document = document;
+        //renderer.RenderDocument();
+        //renderer.PdfDocument.Save("Report.pdf");
     }
 }
