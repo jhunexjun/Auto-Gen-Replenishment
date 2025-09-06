@@ -496,6 +496,7 @@ internal class Program
                                                     string.IsNullOrEmpty(replenishment.ToLocation.State) ? null : $", {replenishment.ToLocation.State}",
                                                     string.IsNullOrEmpty(replenishment.ToLocation.ZipCode) ? null : $", {replenishment.ToLocation.ZipCode}");
 
+
         var document = new Document();
         document.Info.Title = "Unposted Replenishment Report";
         var section = document.AddSection();
@@ -518,7 +519,7 @@ internal class Program
         var metaTable = section.AddTable();
         //metaTable.Borders.Width = 0.2;
         metaTable.Format.Font.Size = 8;
-        metaTable.AddColumn("22cm");
+        metaTable.AddColumn("22cm");    // To do: Maybe you can use calculations to get the good max size?
         metaTable.AddColumn("4cm");
 
         var row = metaTable.AddRow();
