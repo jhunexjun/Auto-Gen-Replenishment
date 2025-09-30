@@ -30,7 +30,6 @@ namespace AutoGenReplenishment.Services
                 Meta = (await multi.ReadAsync<ReplenishmentUnpostedMeta>()).FirstOrDefault(),
                 FromLocation = (await multi.ReadAsync<Location>()).FirstOrDefault(),
                 ToLocation = (await multi.ReadAsync<Location>()).FirstOrDefault(),
-                // LineCount = (await multi.ReadAsync<int>()).Single(),
                 Lines = (await multi.ReadAsync<ReplenishmentUnpostedLineResultModel>()).AsList()
             };
 

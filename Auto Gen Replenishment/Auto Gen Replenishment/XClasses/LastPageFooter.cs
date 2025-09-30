@@ -41,8 +41,8 @@ namespace AutoGenReplenishment.Classes
 
                     row.ConstantItem(200).Column(right =>
                     {
-                        right.Item().Text("Transfer total: " + _lines.Sum(i => i.ReplenishQty).ToString("#,#0.##"));
-                        right.Item().Text("Transfer total 2: " + _lines.Sum(i => i.ReplenishQty).ToString("#,#0.##"));
+                        right.Item().Text("Transfer total: " + _lines.Sum(i => i.XFER_QTY).ToString("#,#0.##"));
+                        right.Item().Text("Transfer total 2: " + _lines.Sum(i => i.XFER_QTY).ToString("#,#0.##"));
                     });
                 });
             });

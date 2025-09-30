@@ -4,16 +4,19 @@ namespace AutoGenReplenishment.Models
 {
     internal class ReplenishmentUnpostedMeta
     {
-        public string XferNo { get; set; }
-        public DateTime ReplenishDate { get; set; }
-        public string ReplenishFrom { get; set; }
-        public string ReplenishTo { get; set; }
-        public string ReplenishBy { get; set; }
+        public string XFER_NO { get; set; }
+        public DateTime SHIP_DAT { get; set; }
+        public string FROM_LOC_ID { get; set; }
+        public string TO_LOC_ID { get; set; }
+        public string SHIP_BY { get; set; }
         public string ReplenishByName { get; set; }
+        [Column("USR_calcMode")]
         public int CalcMode { get; set; }
         [Column("comment")]
-        public string? Comment1 { get; set; }
-        public string? Comment2 { get; set; }
-        public string? Comment3 { get; set; }
+        public string? COMMNT_1 { get; set; }
+        public string? COMMNT_2 { get; set; }
+        public string? COMMNT_3 { get; set; }
+        public DateTime LST_MAINT_DT { get; set; }
+        public string BAT_ID { get; set; }
     }
 }

@@ -72,14 +72,14 @@ internal class Program
             return;
         }
 
-        if (result.LineCount == 0 || result.Lines.Count == 0)
+        if (result.Lines.Count == 0)
         {
             Console.WriteLine("There's no line results.");
             return;
         }
 
-        Console.WriteLine($"Document No: {result.Meta.XferNo}");
-        Console.WriteLine($"From Location: {result.FromLocation.Code} - {result.FromLocation.Descr}");
+        Console.WriteLine($"Document No: {result.Meta.XFER_NO}");
+        Console.WriteLine($"From Location: {result.FromLocation.LOC_ID} - {result.FromLocation.Descr}");
 
         // CreatePdf(company, result);
         GeneratePDF3(company, result);
@@ -482,19 +482,24 @@ internal class Program
                                 string.IsNullOrEmpty(company.EmailAdrs1) ? null : $"\n{company.EmailAdrs1}");
         }
 
-        Func<string> getDocumentMeta = () => string.Concat($"Document #: {replenishment.Meta.XferNo}",
-                                                $"\nDate: {replenishment.Meta.ReplenishDate.ToShortDateString()}",
-                                                $"\nPrepared by: {replenishment.Meta.ReplenishByName}");
+        Func<string> getDocumentMeta = () => string.Concat($"Transfer out #: {replenishment.Meta.XFER_NO}",
+                                                $"\nReplenish Date: {replenishment.Meta.SHIP_DAT.ToShortDateString()}",
+                                                $"\nSaved Date: {replenishment.Meta.LST_MAINT_DT.ToString("g")}",
+                                                $"\nPrepared by: {replenishment.Meta.SHIP_BY}",
+                                                $"\nBatch id: {replenishment.Meta.BAT_ID}",
+                                                $"\nPrint date: {DateTime.Today.ToString("g")}");
 
-        Func<string> getFrom = () => string.Concat($"{replenishment.FromLocation.Descr}",
+        Func<string> getFrom = () => string.Concat($"{replenishment.FromLocation.LOC_ID}",
+                                                    $"\n{replenishment.FromLocation.Descr}",
                                                     string.IsNullOrEmpty(replenishment.FromLocation.City) ? null : $"\n{replenishment.FromLocation.City}",
                                                     string.IsNullOrEmpty(replenishment.FromLocation.State) ? null : $", {replenishment.FromLocation.State}",
-                                                    string.IsNullOrEmpty(replenishment.FromLocation.ZipCode) ? null : $", {replenishment.FromLocation.ZipCode}");
+                                                    string.IsNullOrEmpty(replenishment.FromLocation.Zip_Cod) ? null : $", {replenishment.FromLocation.Zip_Cod}");
 
-        Func<string> getTo = () => string.Concat($"{replenishment.ToLocation.Descr}",
+        Func<string> getTo = () => string.Concat($"{replenishment.ToLocation.LOC_ID}",
+                                                    $"\n{replenishment.ToLocation.Descr}",
                                                     string.IsNullOrEmpty(replenishment.ToLocation.City) ? null : $"\n{replenishment.ToLocation.City}",
                                                     string.IsNullOrEmpty(replenishment.ToLocation.State) ? null : $", {replenishment.ToLocation.State}",
-                                                    string.IsNullOrEmpty(replenishment.ToLocation.ZipCode) ? null : $", {replenishment.ToLocation.ZipCode}");
+                                                    string.IsNullOrEmpty(replenishment.ToLocation.Zip_Cod) ? null : $", {replenishment.ToLocation.Zip_Cod}");
 
 
         var document = new Document();
@@ -520,7 +525,7 @@ internal class Program
         //metaTable.Borders.Width = 0.2;
         metaTable.Format.Font.Size = 8;
         metaTable.AddColumn("22cm");    // To do: Maybe you can use calculations to get the good max size?
-        metaTable.AddColumn("4cm");
+        metaTable.AddColumn("5cm");
 
         var row = metaTable.AddRow();
         //row.Cells[1].Format.Alignment = ParagraphAlignment.Right;
@@ -535,8 +540,8 @@ internal class Program
         addrTable.AddColumn("4cm");
         addrTable.Format.Font.Size = 8;
         var addrRow = addrTable.AddRow();
-        addrRow.Cells[0].AddParagraph($"From:\n{getFrom()}");
-        addrRow.Cells[1].AddParagraph($"To:\n{getTo()}");
+        addrRow.Cells[0].AddParagraph($"From: {getFrom()}");
+        addrRow.Cells[1].AddParagraph($"To: {getTo()}");
 
         section.AddParagraph().AddLineBreak();
 
@@ -576,10 +581,20 @@ internal class Program
         for (int i = 0; i < replenishment.Lines.Count; i++)
         {
             var dataRow = table.AddRow();
-            dataRow.Cells[0].AddParagraph(replenishment.Lines[i].ItemNo);
+            dataRow.Cells[0].AddParagraph(replenishment.Lines[i].ITEM_NO);
             dataRow.Cells[1].AddParagraph(replenishment.Lines[i].Descr);
             dataRow.Cells[2].AddParagraph(replenishment.Lines[i].STK_UNIT);
-            dataRow.Cells[13].AddParagraph(replenishment.Lines[i].ReplenishQty.ToString("#,##0.##"));
+            dataRow.Cells[3].AddParagraph(replenishment.Lines[i].FromBin1 ?? "");
+            dataRow.Cells[4].AddParagraph(replenishment.Lines[i].FromBin2 ?? "");
+            dataRow.Cells[5].AddParagraph(replenishment.Lines[i].FromBin3 ?? "");
+            dataRow.Cells[6].AddParagraph(replenishment.Lines[i].ToBin1 ?? "");
+            dataRow.Cells[7].AddParagraph(replenishment.Lines[i].ToBin2 ?? "");
+            dataRow.Cells[8].AddParagraph(replenishment.Lines[i].ToBin3 ?? "");
+            dataRow.Cells[9].AddParagraph(replenishment.Lines[i].ToBin4 ?? "");
+            dataRow.Cells[10].AddParagraph(replenishment.Lines[i].DIM_1_UPR);
+            dataRow.Cells[11].AddParagraph(replenishment.Lines[i].DIM_2_UPR);
+            dataRow.Cells[12].AddParagraph(replenishment.Lines[i].DIM_3_UPR);
+            dataRow.Cells[13].AddParagraph(replenishment.Lines[i].XFER_QTY.ToString("#,##0.##"));
 
             dataRow.Cells[13].Format.Alignment = ParagraphAlignment.Right;
         }
@@ -594,7 +609,7 @@ internal class Program
         tabelTotals.AddColumn("5cm");
         var tblTotalsRows = tabelTotals.AddRow();
         tblTotalsRows.Cells[0].AddParagraph("Item count: " + replenishment.Lines.Count.ToString("#,###.##"));
-        tblTotalsRows.Cells[1].AddParagraph("Transfer total: " + replenishment.Lines.Sum(l => l.ReplenishQty).ToString("#,###.##"));
+        tblTotalsRows.Cells[1].AddParagraph("Transfer total: " + replenishment.Lines.Sum(l => l.XFER_QTY).ToString("#,###.##"));
 
         tblTotalsRows.Cells[1].Format.Alignment = ParagraphAlignment.Right;
 
@@ -617,7 +632,7 @@ internal class Program
         };
         renderer.RenderDocument();
         renderer.PdfDocument.Save("Report.pdf");
-
+        renderer.PdfDocument.Close();
         //var renderer = new PdfDocumentRenderer(true);
         //renderer.Document = document;
         //renderer.RenderDocument();

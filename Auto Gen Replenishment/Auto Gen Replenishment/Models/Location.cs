@@ -5,7 +5,7 @@ namespace AutoGenReplenishment.Models
 {
     internal class Location
     {
-        public string Code { get; set; }
+        public string LOC_ID { get; set; }
         public string Name { get; set; }
         //[Column("DESCR")]
         //public string Description { get; set; }
@@ -14,11 +14,11 @@ namespace AutoGenReplenishment.Models
         public string State { get; set; }
         public string Zip_Cod { get; set; }
         //[Column("ZIP_COD")]
-        [NotMapped]
-        public string ZipCode
-        {
-            get => Zip_Cod;
-            set => Zip_Cod = value;
-        }
+        //[NotMapped]
+        //public string ZipCode
+        //{
+        //    get => Zip_Cod;
+        //    set => Zip_Cod = value;
+        //}
     }
 }
