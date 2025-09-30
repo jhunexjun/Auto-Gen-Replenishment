@@ -4,7 +4,7 @@ namespace AutoGenReplenishment.Models
 {
     internal class ReplenishmentUnpostedMeta
     {
-        public string DocNo { get; set; }
+        public string XferNo { get; set; }
         public DateTime ReplenishDate { get; set; }
         public string ReplenishFrom { get; set; }
         public string ReplenishTo { get; set; }

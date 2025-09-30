@@ -64,7 +64,7 @@ internal class Program
 
         var replenishmentService = scope.ServiceProvider.GetRequiredService<ReplenishmentUnpostedResultService>();
         // var result = replenishmentService.GetReplenishmentUnpostedResultsAsync("28").Result; // or below.
-        var result = await replenishmentService.GetReplenishmentUnpostedResultsAsync("28");
+        var result = await replenishmentService.GetReplenishmentUnpostedResultsAsync("100207");
 
         if (result == null)
         {
@@ -78,7 +78,7 @@ internal class Program
             return;
         }
 
-        Console.WriteLine($"Document No: {result.Meta.DocNo}");
+        Console.WriteLine($"Document No: {result.Meta.XferNo}");
         Console.WriteLine($"From Location: {result.FromLocation.Code} - {result.FromLocation.Descr}");
 
         // CreatePdf(company, result);
@@ -482,7 +482,7 @@ internal class Program
                                 string.IsNullOrEmpty(company.EmailAdrs1) ? null : $"\n{company.EmailAdrs1}");
         }
 
-        Func<string> getDocumentMeta = () => string.Concat($"Document #: {replenishment.Meta.DocNo}",
+        Func<string> getDocumentMeta = () => string.Concat($"Document #: {replenishment.Meta.XferNo}",
                                                 $"\nDate: {replenishment.Meta.ReplenishDate.ToShortDateString()}",
                                                 $"\nPrepared by: {replenishment.Meta.ReplenishByName}");
 

@@ -11,7 +11,7 @@ namespace AutoGenReplenishment.Models
         public ReplenishmentUnpostedMeta Meta { get; set; } = new();
         public Location FromLocation { get; set; } = new();
         public Location ToLocation { get; set; } = new();
-        public int LineCount { get; set; }
+        //public int LineCount { get; set; }
         public List<ReplenishmentUnpostedLineResultModel> Lines { get; set; } = new();
     }
 }
