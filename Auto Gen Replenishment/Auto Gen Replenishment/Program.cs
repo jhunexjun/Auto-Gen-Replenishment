@@ -64,7 +64,11 @@ internal class Program
 
         var replenishmentService = scope.ServiceProvider.GetRequiredService<ReplenishmentUnpostedResultService>();
         // var result = replenishmentService.GetReplenishmentUnpostedResultsAsync("28").Result; // or below.
-        var result = await replenishmentService.GetReplenishmentUnpostedResultsAsync("100207");
+        var result = await replenishmentService.GetReplenishmentUnpostedAsync("100207");
+
+        using var scope3 = host.Services.CreateScope();
+        replenishmentService = scope3.ServiceProvider.GetRequiredService<ReplenishmentUnpostedResultService>();
+        var dfdsf = await replenishmentService.GetItemsByMinimum();
 
         if (result == null)
         {
@@ -78,11 +82,21 @@ internal class Program
             return;
         }
 
-        Console.WriteLine($"Document No: {result.Meta.XFER_NO}");
-        Console.WriteLine($"From Location: {result.FromLocation.LOC_ID} - {result.FromLocation.Descr}");
+        using var scope2 = host.Services.CreateScope();
+        replenishmentService = scope2.ServiceProvider.GetRequiredService<ReplenishmentUnpostedResultService>();
+        string? xferNo = await replenishmentService.CreateReplenishmentAsync(result);
+        if (xferNo == null)
+        {
+            Console.WriteLine("Creating replenishment, unsuccessful.");
+        }
+        else
+        {
+            Console.WriteLine($"Document No: {result.Meta.XFER_NO}");
+            Console.WriteLine($"From Location: {result.FromLocation.LOC_ID} - {result.FromLocation.Descr}");
 
-        // CreatePdf(company, result);
-        GeneratePDF3(company, result);
+            // CreatePdf(company, result);
+            GeneratePDF3(company, result);
+        }
 
 
         // Ensure DB exists

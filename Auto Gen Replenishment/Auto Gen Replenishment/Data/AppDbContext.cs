@@ -9,9 +9,9 @@ namespace AutoGenReplenishment.Data
         {
         }
 
-        protected AppDbContext()
-        {
-        }
+        //protected AppDbContext()
+        //{
+        //}
 
         public DbSet<ReplenishmentHdr> Replenishments => Set<ReplenishmentHdr>();
         public DbSet<ReplenishmentItemsByMinimum> ReplenishmentItemsByMinimums => Set<ReplenishmentItemsByMinimum>();
